@@ -1,5 +1,6 @@
 package com.example.dividend.service;
 
+import com.example.dividend.exception.impl.NoCompanyException;
 import com.example.dividend.model.Company;
 import com.example.dividend.model.Dividend;
 import com.example.dividend.model.ScrapedResult;
@@ -32,7 +33,7 @@ public class FinanceService {
 
         log.info("search Company - > " ,companyName);
         CompanyEntity company = this.companyRepository.findByName(companyName)
-                .orElseThrow(()->new RuntimeException("존재하지 않는 회사명 입니다."));
+                .orElseThrow(()->new NoCompanyException());
         List<DividendEntity> dividendEntities= this.dividendRepository.findAllByCompanyId(company.getId());
         List<Dividend> dividends = dividendEntities.stream()
                 .map(e -> new Dividend(e.getDate(),e.getDividend())).collect(Collectors.toList());
